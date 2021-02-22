@@ -5,8 +5,7 @@
   "cordova": {
     "id": "cordova-plugin-wm-callrecord",
     "platforms": [
-      "android",
-      "ios"
+      "android"
     ]
   },
   "repository": {

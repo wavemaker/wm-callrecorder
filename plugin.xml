@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-        id="com.example.hello"
-        version="0.7.0">
+        id="cordova-plugin-wm-callrecord"
+        version="0.1.0">
 
-  <name>Hello</name>
+  <name>wm-callrecord</name>
 
   <engines>
     <engine name="cordova" version=">=3.4.0"/>
@@ -11,22 +11,93 @@
 
   <asset src="www/hello.js" target="js/hello.js"/>
 
-  <js-module src="www/hello.js" name="hello">
-    <clobbers target="hello" />
+  <js-module src="www/hello.js" name="Callrecord">
+    <merges target="hello" />
   </js-module>
 
   <platform name="android">
-
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+      <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+      <uses-permission android:name="android.permission.READ_CALL_LOG" />
+      <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+      <uses-permission android:name="android.permission.READ_CONTACTS" />
+      <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+      <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+      <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+      <uses-permission android:name="android.permission.WAKE_LOCK" />
+      <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />      
+    </config-file>
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Hello">
-        <param name="android-package" value="com.example.plugin.Hello"/>
+      <feature name="Callrecord">
+                <param name="android-package" value="cordova.plugins.wmcallrecord"/>
+                <param name="onload" value="true" />
       </feature>
     </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <service android:name="com.callrecord.services.RecordingService" />
+
+        <service
+            android:name="com.callrecord.services.TileService"
+            android:icon="@drawable/ic_call_black_24dp"
+            android:label="@string/recording_enabled"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="androidcom.callrecord.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.callrecord.services.MyAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:label="@string/accessibility_service_label">
+            <intent-filter android:priority="1000">
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice"
+                       android:resource="@xml/accessibility_service_config" />
+        </service>    
+
+        <receiver android:name="com.callrecord.services.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.callrecord.services.OnUpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.callrecord.services.OnExternalReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
+        
+      </config-file>
+
+    <source-file src="src/android/com/callrecord/services/RecordingService.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/TileService.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/MyAccessibilityService.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/OnBootReceiver.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/OnUpgradeReceiver.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/OnExternalReceiver.java" target-dir="src/com/callrecord/services"/>
+    <source-file src="src/android/com/callrecord/services/MyAccessibilityService.java" target-dir="src/com/callrecord/services"/>
 
     <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
   </platform>
 
-  <platform name="ios">
+  <!-- <platform name="ios">
     
     <config-file target="config.xml" parent="/widget">
       <feature name="Hello">
@@ -36,6 +107,6 @@
 
     <header-file src="src/ios/HWPHello.h" target-dir="HelloPlugin"/>
     <source-file src="src/ios/HWPHello.m" target-dir="HelloPlugin"/>
-  </platform>
-  
+  </platform> -->
+
 </plugin>
