@@ -1,30 +1,29 @@
 {
-  "name": "cordova-plugin-hello",
+  "name": "cordova-plugin-wm-callrecord",
   "version": "0.1.0",
-  "description": "A sample for a new cordova plugin",
+  "description": "A plugin to record call",
   "cordova": {
-    "id": "cordova-plugin-hello",
+    "id": "cordova-plugin-wm-callrecord",
     "platforms": [
       "android",
-      "ios",
-      "wp7"
+      "ios"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/don/cordova-plugin-hello.git"
+    "url": "git+https://github.com/radhakrishnan-wavemaker/wm-callrecorder.git"
   },
   "keywords": [
     "cordova",
     "plugin",
-    "hello",
-    "ecosystem:cordova",
-    "cordova-android"
+    "call-record",
+    "recorder",
+    "call"
   ],
-  "author": "Don Coleman",
+  "author": "Radhakrishnan",
   "license": "Apache-2",
   "bugs": {
-    "url": "https://github.com/don/cordova-plugin-hello/issues"
+    "url": "https://github.com/radhakrishnan-wavemaker/wm-callrecorder/issues"
   },
-  "homepage": "https://github.com/don/cordova-plugin-hello#readme"
+  "homepage": "https://github.com/radhakrishnan-wavemaker/wm-callrecorder#README.md"
 }
