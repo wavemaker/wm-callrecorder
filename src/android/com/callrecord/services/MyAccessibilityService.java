@@ -2,7 +2,6 @@ package com.callrecord.services;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 public class MyAccessibilityService extends AccessibilityService {

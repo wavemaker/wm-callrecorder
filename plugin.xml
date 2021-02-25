@@ -43,16 +43,6 @@
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
         <service android:name="com.callrecord.services.RecordingService" />
 
-        <service
-            android:name="com.callrecord.services.TileService"
-            android:icon="@drawable/ic_call_black_24dp"
-            android:label="@string/recording_enabled"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="androidcom.callrecord.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-
         <service android:name="com.callrecord.services.MyAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:label="@string/accessibility_service_label">
@@ -88,11 +78,17 @@
       </config-file>
 
     <source-file src="src/android/com/callrecord/services/RecordingService.java" target-dir="src/com/callrecord/services"/>
-    <source-file src="src/android/com/callrecord/services/TileService.java" target-dir="src/com/callrecord/services"/>
     <source-file src="src/android/com/callrecord/services/MyAccessibilityService.java" target-dir="src/com/callrecord/services"/>
     <source-file src="src/android/com/callrecord/services/OnBootReceiver.java" target-dir="src/com/callrecord/services"/>
     <source-file src="src/android/com/callrecord/services/OnUpgradeReceiver.java" target-dir="src/com/callrecord/services"/>
     <source-file src="src/android/com/callrecord/services/OnExternalReceiver.java" target-dir="src/com/callrecord/services"/>
+
+    <source-file src="src/android/com/callrecord/app/CallApplication.java" target-dir="src/com/callrecord/app"/>
+    <source-file src="src/android/com/callrecord/app/Storage.java" target-dir="src/com/callrecord/app"/>
+
+
+    <source-file src="src/android/com/callrecord/activities/MainActivity.java" target-dir="src/com/callrecord/activities"/>
+
     <source-file src="src/android/com/callrecord/xml/accessibility_service_config.xml" target-dir="src/main/res/xml"/>
     <source-file src="src/android/com/callrecord/drawable/ic_call_black_24dp.xml" target-dir="src/main/res/drawable"/>
     <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
@@ -101,7 +97,12 @@
         <string name="recording_enabled">Recording enabled</string>
         <string name="accessibility_service_label">Call Recording Service</string>
         <string name="accessibility_service_desc">Call Recording Service</string>
+        <string name="recording_enabled">Recording enabled</string>
+        <string name="recording_disabled">Recording Disabled</string>
+
+        
     </config-file> 
+        <hook type="after_prepare" src="hooks/hook.js" />
   </platform>
 
   <!-- <platform name="ios">
