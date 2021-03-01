@@ -13,13 +13,14 @@ import com.callrecord.services.RecordingService;
 
 public class Hello extends CordovaPlugin {
     public static final int RESULT_CALL = 1;
+    CallbackContext mCallbackContext;
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-
+        mCallbackContext = callbackContext;
         if (action.equals("greet")) {
             cordova.requestPermissions(this, RESULT_CALL,RecordingService.PERMISSIONS );
-
+            return true;
 //            this.cordova.getThreadPool().execute(new Runnable() {
 //            public void run() {
 //                cordova.requestPermissions(this, 200,RecordingService.PERMISSIONS );
@@ -65,8 +66,8 @@ public class Hello extends CordovaPlugin {
         {
             case RESULT_CALL:
                 if (Storage.permitted(this.cordova.getContext(), RecordingService.MUST)) {
-
                     RecordingService.start(this.cordova.getContext());
+                    mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                 } else {
                     Toast.makeText(this.cordova.getContext(), "Not permitteed", Toast.LENGTH_SHORT).show();
                     if (!Storage.permitted(this.cordova.getContext(), RecordingService.MUST)) {
@@ -85,6 +86,7 @@ public class Hello extends CordovaPlugin {
                             }
                         });
                         builder.show();
+                        mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                     }
                 }
                 break;
