@@ -32,6 +32,6 @@ public class OnExternalReceiver extends BroadcastReceiver {
     }
 
     public void onBootReceived(Context context) {
-        RecordingService.startIfEnabled(context);
+        RecordingService.start(context);
     }
 }

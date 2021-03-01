@@ -1,15 +1,10 @@
 package com.callrecord.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,7 +16,6 @@ import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    public final static String TAG = MainActivity.class.getSimpleName();
 
     public static final int RESULT_CALL = 1;
 
@@ -47,15 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     });
 
 
-    Storage storage;
-
-
-    public static void startActivity(Context context) {
-        Intent i = new Intent(context, MainActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(i);
-    }
 
     public static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);
@@ -64,19 +49,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        storage = new Storage(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        RecordingService.startIfEnabled(this);
+        RecordingService.start(this);
 
 
         View rec = findViewById(R.id.record);
@@ -97,13 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-    }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -111,14 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case RESULT_CALL:
                 if (Storage.permitted(this, MUST)) {
-                    try {
-                        storage.migrateLocalStorage();
-                    } catch (RuntimeException e) {
-                        Log.e(TAG, "onRequestPermissionsResult: " + e);
-                    }
-                        RecordingService.setEnabled(this, true);
+
+                    RecordingService.start(this);
                 } else {
-                    Toast.makeText(this, R.string.not_permitted, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Not permitteed", Toast.LENGTH_SHORT).show();
                     if (!Storage.permitted(this, MUST)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Permissions");
@@ -131,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Storage.showPermissions(MainActivity.this);
+                                // Storage.showPermissions(MainActivity.this);
                             }
                         });
                         builder.show();

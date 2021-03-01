@@ -7,7 +7,6 @@ import android.content.Intent;
 public class OnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-//        OptimizationPreferenceCompat.setPrefTime(context, CallApplication.PREFERENCE_BOOT, System.currentTimeMillis());
-        RecordingService.startIfEnabled(context);
+        RecordingService.start(context);
     }
 }

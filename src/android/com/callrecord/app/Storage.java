@@ -1,147 +1,65 @@
 package com.callrecord.app;
 
-import android.content.ContentResolver;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.preference.PreferenceManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.Date;
+public class Storage {
+    private static final String TAG = Storage.class.getSimpleName();
 
-public class Storage extends com.github.axet.audiolibrary.app.Storage {
-    public static String TAG = Storage.class.getSimpleName();
+    protected static boolean permittedForce = false; // bugged phones has no PackageManager.ACTION_REQUEST_PERMISSIONS activity. allow it all.
 
-    public static final String EXT_3GP = "3gp";
-    public static final String EXT_AAC = "aac";
+    public static final String SCHEME_PACKAGE = "package";
 
-    public static String filterMediaRecorder(String ext) {
-        if (ext.startsWith(EXT_3GP))
-            ext = EXT_3GP; // replace "3gp16" -> "3gp"
-        if (ext.startsWith(EXT_AAC))
-            ext = EXT_AAC; // replace "aache" / "aaceld" -> "aac"
-        return ext;
-    }
+    public static final String COLON = ":";
 
-    public static String escape(String s) {
-        return s.replace("/", "\\\\");
-    }
 
-    public static String getFormatted(String format, long now, String phone, String contact, String call) {
-        if (contact != null && !contact.isEmpty()) {
-            format = format.replaceAll("%c", escape(contact));
-        } else {
-            if (phone != null && !phone.isEmpty())
-                format = format.replaceAll("%c", phone);
-            else
-                format = format.replaceAll("%c", "");
-        }
+    // String functions
 
-        if (phone != null && !phone.isEmpty())
-            format = format.replaceAll("%p", phone);
-        else
-            format = format.replaceAll("%p", "");
-
-        format = format.replaceAll("%T", "" + now / 1000);
-        format = format.replaceAll("%s", SIMPLE.format(new Date()));
-        format = format.replaceAll("%I", ISO8601.format(new Date()));
-
-        if (call == null || call.isEmpty()) {
-            format = format.replaceAll("%i", "");
-        } else {
-            switch (call) {
-                case CallApplication.CALL_IN:
-                    format = format.replaceAll("%i", "incoming");
-                    break;
-                case CallApplication.CALL_OUT:
-                    format = format.replaceAll("%i", "outgoing");
-                    break;
-            }
-        }
-
-        format = format.replaceAll("  ", " ");
-
-        format = format.trim();
-
-        return format;
-    }
-
-    public Storage(Context context) {
-        super(context);
-    }
-
-    @Override
-    public Uri migrate(File ff, Uri tt) {
-        Uri t = super.migrate(ff, tt);
-        if (t == null)
-            return null;
-        Uri f = Uri.fromFile(ff);
-        CallApplication.setContact(context, t, CallApplication.getContact(context, f)); // copy contact to migrated file
-        CallApplication.setCall(context, t, CallApplication.getCall(context, f)); // copy call to migrated file
-        return t;
-    }
-
-    @Override
-    public Uri rename(Uri f, String tt) {
-        Uri t = super.rename(f, tt);
-        if (t == null)
-            return null;
-        CallApplication.setContact(context, t, CallApplication.getContact(context, f)); // copy contact to new name
-        CallApplication.setCall(context, t, CallApplication.getCall(context, f)); // copy call to new name
-        return t;
-    }
-
-    public boolean recordingNextPending() {
-        File tmp = getTempRecording();
-        if (tmp.exists())
+    public static boolean permitted(Context context, String[] ss) {
+        if (permittedForce)
             return true;
-        File parent = tmp.getParentFile();
-        File[] ff = parent.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getName().startsWith(TMP_REC);
+        if (Build.VERSION.SDK_INT < 16)
+            return true;
+        for (String s : ss) {
+            if (ContextCompat.checkSelfPermission(context, s) != PackageManager.PERMISSION_GRANTED) {
+                return false;
             }
-        });
-        return ff != null && ff.length > 0;
-    }
-
-    public File getTempNextRecording() {
-        File tmp = super.getTempRecording();
-        if (tmp.exists())
-            return tmp;
-        File parent = tmp.getParentFile();
-        File[] ff = parent.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getName().startsWith(TMP_REC);
-            }
-        });
-        if (ff == null)
-            return null;
-        if (ff.length == 0)
-            return null;
-        return ff[0];
-    }
-
-    public Uri getNewFile(long now, String phone, String contact, String call) {
-        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
-        String ext = shared.getString(com.github.axet.audiolibrary.app.MainApplication.PREFERENCE_ENCODING, "");
-        ext = filterMediaRecorder(ext);
-
-        String format = "%s";
-        format = shared.getString(CallApplication.PREFERENCE_FORMAT, format);
-
-        format = getFormatted(format, now, phone, contact, call);
-
-        Uri parent = getStoragePath();
-        String s = parent.getScheme();
-        if (s.equals(ContentResolver.SCHEME_FILE)) {
-            File f = getFile(parent);
-            if (!f.exists() && !f.mkdirs())
-                throw new RuntimeException("Unable to create: " + f);
         }
-        return getNextFile(context, parent, format, ext);
+        return true;
     }
 
+    public static boolean permitted(Activity a, String[] ss, int code) {
+        if (permittedForce)
+            return true;
+        if (Build.VERSION.SDK_INT < 16)
+            return true;
+        for (String s : ss) {
+            if (ContextCompat.checkSelfPermission(a, s) != PackageManager.PERMISSION_GRANTED) {
+                try {
+                    ActivityCompat.requestPermissions(a, ss, code);
+                } catch (ActivityNotFoundException e) {
+                    permittedForce = true;
+                    return true;
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void showPermissions(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts(SCHEME_PACKAGE, context.getPackageName(), null);
+        intent.setData(uri);
+        context.startActivity(intent);
+    }
 }
