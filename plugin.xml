@@ -29,9 +29,11 @@
     </config-file>
 
     <asset src="www/callrecord.js" target="js/callrecord.js"/>
+
     <js-module src="www/callrecord.js" name="callrecord">
-      <merges target="callrecord" />
+      <merges target="cordova.plugins.callrecord" />
     </js-module>
+
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="Callrecord">
           <param name="android-package" value="com.example.plugin.Callrecord"/>
