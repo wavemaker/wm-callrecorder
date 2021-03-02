@@ -11,14 +11,14 @@ import com.callrecord.app.Storage;
 import com.callrecord.services.RecordingService;
 
 
-public class Hello extends CordovaPlugin {
+public class Callrecord extends CordovaPlugin {
     public static final int RESULT_CALL = 1;
     CallbackContext mCallbackContext;
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         mCallbackContext = callbackContext;
-        if (action.equals("greet")) {
+        if (action.equals("startRecordingService")) {
             cordova.requestPermissions(this, RESULT_CALL,RecordingService.PERMISSIONS );
             return true;
         }

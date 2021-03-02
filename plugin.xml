@@ -9,12 +9,6 @@
     <engine name="cordova" version=">=3.4.0"/>
   </engines>
 
-  <asset src="www/hello.js" target="js/hello.js"/>
-
-  <js-module src="www/hello.js" name="hello">
-    <merges target="hello" />
-  </js-module>
-
   <platform name="android">
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -33,11 +27,17 @@
       <uses-permission android:name="android.permission.WAKE_LOCK" />
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />      
     </config-file>
+
+    <asset src="www/callrecord.js" target="js/callrecord.js"/>
+    <js-module src="www/callrecord.js" name="callrecord">
+      <merges target="callrecord" />
+    </js-module>
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Hello">
-          <param name="android-package" value="com.example.plugin.Hello"/>
+      <feature name="Callrecord">
+          <param name="android-package" value="com.example.plugin.Callrecord"/>
       </feature>
     </config-file>
+
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
         <service android:name="com.callrecord.services.RecordingService" />
 
@@ -85,7 +85,7 @@
 
     <source-file src="src/android/com/callrecord/xml/accessibility_service_config.xml" target-dir="src/main/res/xml"/>
     <source-file src="src/android/com/callrecord/drawable/ic_call_black_24dp.xml" target-dir="src/main/res/drawable"/>
-    <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
+    <source-file src="src/android/Callrecord.java" target-dir="src/com/example/plugin/"/>
 
     <config-file target="res/values/strings.xml" parent="/*">
     <string name="accessibility_service_label">Call Recording Service</string>
