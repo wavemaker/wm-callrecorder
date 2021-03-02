@@ -21,47 +21,13 @@ public class Hello extends CordovaPlugin {
         if (action.equals("greet")) {
             cordova.requestPermissions(this, RESULT_CALL,RecordingService.PERMISSIONS );
             return true;
-//            this.cordova.getThreadPool().execute(new Runnable() {
-//            public void run() {
-//                cordova.requestPermissions(this, 200,RecordingService.PERMISSIONS );
-//
-//
-////                if (!Storage.permitted(cordova.getActivity(), RecordingService.PERMISSIONS, RecordingService.RESULT_CALL)) {
-////                }
-//                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-//            }
-//        });
-
-
         }
 
         return false;
-        // if (action.equals("greet")) {
-
-        //     String name = data.getString(0);
-        //     String message = "Hello, " + name;
-        //     callbackContext.success(message);
-
-        //     return true;
-
-        // } else {
-            
-        //     return false;
-
-        // }
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException
-    {
-//        for(int r:grantResults)
-//        {
-//            if(r == PackageManager.PERMISSION_DENIED)
-//            {
-//                this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
-//                return;
-//            }
-//        }
+                                          int[] grantResults) throws JSONException    {
         switch(requestCode)
         {
             case RESULT_CALL:
