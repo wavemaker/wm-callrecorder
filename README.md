@@ -5,7 +5,6 @@ Cordova plugin that allows to record Voice calls, This plugin supports only Andr
 
 - [How does it work](#how-does-it-works)
 - [Caveat](#caveat)
-- [Roadmap](#roadmap)
 - [Setup](#setup)
 - [Sample APK](#APK)
 
