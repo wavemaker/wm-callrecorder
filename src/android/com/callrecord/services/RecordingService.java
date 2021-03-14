@@ -321,7 +321,7 @@ public class RecordingService extends Service {
         if(!file.exists()){
             file.mkdirs();
         }
-        return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".3gp");
+        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".3gp");
     }
 
     void stopRecording() {
@@ -360,8 +360,6 @@ public class RecordingService extends Service {
         if (intent != null) {
             String action = intent.getAction();
             Log.d(TAG, "onStartCommand " + action);
-//            onStartCommand(intent);
-
 
         }
         return super.onStartCommand(intent, flags, startId);

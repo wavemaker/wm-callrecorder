@@ -5,7 +5,6 @@ Cordova plugin that allows to record Voice calls, This plugin supports only Andr
 
 - [How does it work](#how-does-it-works)
 - [Caveat](#caveat)
-- [Roadmap](#roadmap)
 - [Setup](#setup)
 - [Sample APK](#APK)
 
@@ -24,6 +23,9 @@ In Android 10, In some devices we will not be able to record the caller’s voic
 
 # Setup
 
+
+## 1. Start Service
+
     var success = function(message) {
         alert("Recording Enabled");
     }
@@ -33,6 +35,68 @@ In Android 10, In some devices we will not be able to record the caller’s voic
     }
 
     cordova.plugins.callrecord.startRecordingService(success, failure);
+
+
+
+## 1. Start Service
+
+    var success = function(message) {
+        alert("Recording Enabled");
+    }
+
+    var failure = function() {
+        alert("Error calling Plugin");
+    }
+
+    cordova.plugins.callrecord.startRecordingService(success, failure);
+
+## 2. Open Accessibility Service
+
+    var success = function() {
+        alert("Accessibility Opened");
+    }
+
+    var failure = function() {
+        alert("Error calling Plugin");
+    }
+
+    cordova.plugins.callrecord.openAccessibility(success, failure);
+
+## 3. Open AppSetting
+
+    var success = function() {
+        alert("AppSetting Opened");
+    }
+
+    var failure = function() {
+        alert("Error calling Plugin");
+    }
+
+    cordova.plugins.callrecord.openAppSetting(success, failure);
+
+## 4. Exclude Power Saver Service
+
+    var success = function() {
+        alert("Excluded Power Saver");
+    }
+
+    var failure = function() {
+        alert("Error calling Plugin");
+    }
+
+    cordova.plugins.callrecord.excludePowerSaver(success, failure);
+
+## 5. IsExclude Power Saver Service
+
+    var success = function(flag) { //boolean flag
+        alert("Excluded Power Saver status" + flag);
+    }
+
+    var failure = function() {
+        alert("Error calling Plugin");
+    }
+
+    cordova.plugins.callrecord.IsIgnoringBatteryOptimizations(success, failure);
 
 
 # Sample APK

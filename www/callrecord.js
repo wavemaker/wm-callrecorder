@@ -6,5 +6,14 @@ module.exports = {
     },
     openAccessibility: function (successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "Callrecord", "openAccessibility", []);
+    },
+    openAppSetting: function (successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Callrecord", "openAppSetting", []);
+    },
+    excludePowerSaver: function (successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Callrecord", "excludePowerSaver", []);
+    },
+    IsIgnoringBatteryOptimizations: function (successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Callrecord", "IsIgnoringBatteryOptimizations", []);
     }
 };

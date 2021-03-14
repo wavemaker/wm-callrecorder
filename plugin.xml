@@ -57,7 +57,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -90,8 +90,8 @@
     <source-file src="src/android/Callrecord.java" target-dir="src/com/example/plugin/"/>
 
     <config-file target="res/values/strings.xml" parent="/*">
-    <string name="accessibility_service_label">Call Recording Service</string>
-    <string name="accessibility_service_desc">Call Recording Service</string>
+    <string name="accessibility_service_label">WM-Call Recording Service</string>
+    <string name="accessibility_service_desc">WM-Call Recording Service</string>
     </config-file> 
 
   </platform>
