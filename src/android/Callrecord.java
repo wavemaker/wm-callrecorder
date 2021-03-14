@@ -2,6 +2,7 @@ package com.example.plugin;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.widget.Toast;
 
 import org.apache.cordova.*;
@@ -21,10 +22,20 @@ public class Callrecord extends CordovaPlugin {
         if (action.equals("startRecordingService")) {
             cordova.requestPermissions(this, RESULT_CALL,RecordingService.PERMISSIONS );
             return true;
+        } else if(action.equals("open")){
+            openAccessibility();
+            return true;
         }
 
         return false;
     }
+
+    public  void openAccessibility(){
+        Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        this.cordova.getActivity().startActivity(intent);
+        mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+    }
+
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
                                           int[] grantResults) throws JSONException    {
@@ -48,7 +59,7 @@ public class Callrecord extends CordovaPlugin {
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-//                                Storage.showPermissions();
+//                                Storage.showPermissions(this);
                             }
                         });
                         builder.show();
