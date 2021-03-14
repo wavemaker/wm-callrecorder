@@ -37,19 +37,6 @@ In Android 10, In some devices we will not be able to record the caller’s voic
     cordova.plugins.callrecord.startRecordingService(success, failure);
 
 
-
-## 1. Start Service
-
-    var success = function(message) {
-        alert("Recording Enabled");
-    }
-
-    var failure = function() {
-        alert("Error calling Plugin");
-    }
-
-    cordova.plugins.callrecord.startRecordingService(success, failure);
-
 ## 2. Open Accessibility Service
 
     var success = function() {
