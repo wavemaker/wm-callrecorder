@@ -90,8 +90,8 @@
     <source-file src="src/android/Callrecord.java" target-dir="src/com/example/plugin/"/>
 
     <config-file target="res/values/strings.xml" parent="/*">
-    <string name="accessibility_service_label">Call Recording Service</string>
-    <string name="accessibility_service_desc">Call Recording Service</string>
+    <string name="accessibility_service_label">WM-Call Recording Service</string>
+    <string name="accessibility_service_desc">WM-Call Recording Service</string>
     </config-file> 
 
   </platform>

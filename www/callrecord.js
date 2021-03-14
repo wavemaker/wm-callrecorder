@@ -6,5 +6,8 @@ module.exports = {
     },
     openAccessibility: function (successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "Callrecord", "openAccessibility", []);
+    },
+    accessibilityStatus: function (successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Callrecord", "accessibilityStatus", []);
     }
 };

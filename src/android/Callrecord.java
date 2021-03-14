@@ -3,6 +3,8 @@ package com.example.plugin;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import org.apache.cordova.*;
@@ -22,8 +24,11 @@ public class Callrecord extends CordovaPlugin {
         if (action.equals("startRecordingService")) {
             cordova.requestPermissions(this, RESULT_CALL,RecordingService.PERMISSIONS );
             return true;
-        } else if(action.equals("open")){
+        } else if(action.equals("openAccessibility")){
             openAccessibility();
+            return true;
+        } else if(action.equals("accessibilityStatus")){
+            openAppSetting();
             return true;
         }
 
@@ -35,6 +40,14 @@ public class Callrecord extends CordovaPlugin {
         this.cordova.getActivity().startActivity(intent);
         mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
     }
+
+  public  void openAppSetting(){
+        Intent appIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", cordova.getActivity().getPackageName(), null);
+        appIntent.setData(uri);
+        cordova.getActivity().startActivity(appIntent);
+    }
+
 
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
@@ -59,7 +72,7 @@ public class Callrecord extends CordovaPlugin {
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-//                                Storage.showPermissions(this);
+                                openAppSetting();
                             }
                         });
                         builder.show();
