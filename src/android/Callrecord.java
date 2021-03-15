@@ -55,13 +55,13 @@ public class Callrecord extends CordovaPlugin {
                 boolean message = false;
                 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                    message =true;
+                    message = true;
                 }
                 else
                 {
-                    message =false;
+                    message = false;
                 }
-                callbackContext.success(message);
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, message));
                 return true;
             }
             else
@@ -111,7 +111,7 @@ public class Callrecord extends CordovaPlugin {
         Uri uri = Uri.fromParts("package", cordova.getActivity().getPackageName(), null);
         appIntent.setData(uri);
         cordova.getActivity().startActivity(appIntent);
-        callbackContext.success();
+        mCallbackContext.success();
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
