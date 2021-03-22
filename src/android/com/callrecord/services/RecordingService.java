@@ -28,7 +28,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.callrecord.app.Storage;
-import com.plain.R;
 
 import java.io.File;
 import java.io.IOException;
