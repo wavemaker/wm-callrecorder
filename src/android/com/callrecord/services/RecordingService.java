@@ -320,7 +320,7 @@ public class RecordingService extends Service {
         if(!file.exists()){
             file.mkdirs();
         }
-        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".3gp");
+        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".mp3");
     }
 
     void stopRecording() {
