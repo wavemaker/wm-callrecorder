@@ -28,7 +28,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.callrecord.app.Storage;
-import com.plain.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -321,7 +320,7 @@ public class RecordingService extends Service {
         if(!file.exists()){
             file.mkdirs();
         }
-        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".3gp");
+        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".mp3");
     }
 
     void stopRecording() {
