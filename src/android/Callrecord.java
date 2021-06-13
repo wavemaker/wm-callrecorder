@@ -8,21 +8,38 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.callrecord.app.Storage;
 import com.callrecord.services.RecordingService;
 
+import org.apache.cordova.LOG;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
+import android.content.BroadcastReceiver;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import android.content.IntentFilter;
+
 
 
 public class Callrecord extends CordovaPlugin {
     public static final int RESULT_CALL = 1;
     CallbackContext mCallbackContext;
+    CallbackContext mListenerContext;
+
+    BroadcastReceiver receiver;
+
+    /**
+     * Constructor.
+     */
+    public Callrecord() {
+        this.receiver = null;
+    }
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
@@ -44,10 +61,26 @@ public class Callrecord extends CordovaPlugin {
         } else if (action.equals("IsIgnoringBatteryOptimizations")) {
             this.IsIgnoringBatteryOptimizations(context, packageName, callbackContext);
             return true;
+        } else if (action.equals("fileAvailable")) {
+            mListenerContext = callbackContext;                        
+           LocalBroadcastManager.getInstance(this.cordova.getActivity().getApplicationContext()).registerReceiver(mFileChangeReceiver, new IntentFilter(RecordingService.RECORD_ACTION));
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+            return true;
         }
 
         return false;
     }
+
+
+    private BroadcastReceiver mFileChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            updateRecodingChanges();
+        }
+    };
 
     public boolean IsIgnoringBatteryOptimizations(Context context, String packageName, CallbackContext callbackContext) {
         try {
@@ -128,10 +161,7 @@ public class Callrecord extends CordovaPlugin {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this.cordova.getContext());
                         builder.setTitle("Permissions");
                         builder.setMessage("Call permissions must be enabled manually");
-                        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
+                        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         });
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -147,4 +177,41 @@ public class Callrecord extends CordovaPlugin {
         }
     }
 
+
+    /**
+     * Creates a JSONObject with the a flag
+     *
+     * @return a JSONObject containing the record status information
+     */
+    private JSONObject getRecordChanges() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("changes", true);
+        } catch (JSONException e) {
+            LOG.e("CallRecord", e.getMessage(), e);
+        }
+        return obj;
+    }
+
+    /**
+     * Updates the JavaScript side whenever the recording available
+     *
+     * @return
+     */
+    private void updateRecodingChanges() {
+        sendUpdate(this.getRecordChanges(), true);
+    }
+
+/**
+     * Create a new plugin result and send it back to JavaScript
+     *
+     */
+    private void sendUpdate(JSONObject info, boolean keepCallback) {
+        if (this.mListenerContext != null) {
+            Log.e("Recording_debug", "Broadcast Ended");
+            PluginResult result = new PluginResult(PluginResult.Status.OK, info);
+            result.setKeepCallback(keepCallback);
+            this.mListenerContext.sendPluginResult(result);
+        }
+    }
 }
