@@ -86,7 +86,7 @@ In Android 10, In some devices we will not be able to record the caller’s voic
     cordova.plugins.callrecord.IsIgnoringBatteryOptimizations(success, failure);
 
 
-## 5. Recording File Available Event
+## 5. Recording File Available Event Listener
 ### Note
 Recording service will be running independent of the application, This event is in application layer hence event will not be triggered if
 * App was not launched since the mobile booted
