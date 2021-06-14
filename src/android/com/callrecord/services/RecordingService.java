@@ -22,6 +22,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -46,6 +47,7 @@ import java.util.Arrays;
 public class RecordingService extends Service {
     public static final String TAG = RecordingService.class.getSimpleName();
     private static final String AUDIO_RECORDER_FOLDER = "Call Record";
+    public static final String RECORD_ACTION = "fileAvailable";
     MediaRecorder recorder;
 
     public static final int DEFAULT_RATE = 16000;
@@ -54,8 +56,6 @@ public class RecordingService extends Service {
 
     public static final String CALL_OUT = "out";
     public static final String CALL_IN = "in";
-
-    public static final int RESULT_CALL = 1;
 
     public static final String[] CONTACTS = new String[]{
             Manifest.permission.READ_CONTACTS,
@@ -234,9 +234,6 @@ public class RecordingService extends Service {
             startMyOwnForeground();
         else
             startForeground(1, new Notification());
-
-//        startForeground(1, new Notification());
-
     }
 
     private void startMyOwnForeground(){
@@ -327,6 +324,10 @@ public class RecordingService extends Service {
         recorder.stop();
         recorder.release();
         recorder = null;
+
+        Log.e("Recording_debug", "Broadcast triggred");
+        Intent intent = new Intent(RecordingService.RECORD_ACTION);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
     void begin() {
         startRecording();
