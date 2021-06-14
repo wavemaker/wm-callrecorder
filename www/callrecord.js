@@ -33,7 +33,7 @@ channel.onCordovaReady.subscribe(function () {
         cordova.fireDocumentEvent('fileAvailable'); 
     },
     function (e) {
-        console.log('Error initializing Network Connection: ' + e);
+        console.log('Error initializing fireDocumentEvent: ' + e);
     });
 });
 

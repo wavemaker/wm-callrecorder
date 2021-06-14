@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.callrecord.app.Storage;
@@ -186,29 +185,27 @@ public class Callrecord extends CordovaPlugin {
     private JSONObject getRecordChanges() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("changes", true);
+            obj.put("fileAvailable", true);
         } catch (JSONException e) {
             LOG.e("CallRecord", e.getMessage(), e);
         }
         return obj;
     }
 
+    
     /**
-     * Updates the JavaScript side whenever the recording available
-     *
-     * @return
-     */
+     * Updates the recording available
+    */
     private void updateRecodingChanges() {
         sendUpdate(this.getRecordChanges(), true);
     }
 
-/**
-     * Create a new plugin result and send it back to JavaScript
-     *
-     */
+
+    /**
+     * Updates the JS layer that recording file is available
+    */
     private void sendUpdate(JSONObject info, boolean keepCallback) {
         if (this.mListenerContext != null) {
-            Log.e("Recording_debug", "Broadcast Ended");
             PluginResult result = new PluginResult(PluginResult.Status.OK, info);
             result.setKeepCallback(keepCallback);
             this.mListenerContext.sendPluginResult(result);
