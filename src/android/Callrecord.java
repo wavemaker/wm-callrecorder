@@ -77,7 +77,7 @@ public class Callrecord extends CordovaPlugin {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            updateRecodingChanges();
+            updateRecordingChanges();
         }
     };
 
@@ -196,7 +196,7 @@ public class Callrecord extends CordovaPlugin {
     /**
      * Updates the recording available
     */
-    private void updateRecodingChanges() {
+    private void updateRecordingChanges() {
         sendUpdate(this.getRecordChanges(), true);
     }
 
