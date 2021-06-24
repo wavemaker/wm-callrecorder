@@ -52,8 +52,10 @@ public class Storage {
 
 
 
-    public static String getFormatted( String phone, String contact, String call) {
+    public static String getFormatted( String phone, String contact, String call, String cPhone) {
         String format = "";
+        if (phone != null && !phone.isEmpty())
+            format += phone + SEPERATOR;
         switch (call) {
             case RecordingService.CALL_IN:
                 format += "Incoming" + SEPERATOR;
@@ -62,8 +64,8 @@ public class Storage {
                 format += "Outgoing" + SEPERATOR;
                 break;
         }
-        if (phone != null && !phone.isEmpty())
-            format += phone + SEPERATOR;
+        if (cPhone != null && !cPhone.isEmpty())
+            format += cPhone + SEPERATOR;
         if (contact != null && !contact.isEmpty())
             format += contact + SEPERATOR;
         format += System.currentTimeMillis();

@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.MediaRecorder;
@@ -21,6 +22,7 @@ import android.os.IBinder;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneNumberUtils;
@@ -83,6 +85,7 @@ public class RecordingService extends Service {
     PhoneStateReceiver state;
     PhoneStateChangeListener pscl;
     String phone = "";
+    String cPhone = "unknown";
     String contact = "";
     String contactId = "";
     String call;
@@ -136,6 +139,10 @@ public class RecordingService extends Service {
 
         public PhoneStateChangeListener() {
             tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                String mPhoneNumber = tm.getLine1Number();
+                setCurrentPhone(mPhoneNumber);
+            }
         }
 
         public void register() {
@@ -184,6 +191,12 @@ public class RecordingService extends Service {
     }
 
     public RecordingService() {
+    }
+
+    public void setCurrentPhone(String s){
+        if (s == null || s.isEmpty())
+            return;
+        cPhone = PhoneNumberUtils.formatNumber(s);
     }
 
     public void setPhone(String s, String c) {
@@ -317,7 +330,7 @@ public class RecordingService extends Service {
         if(!file.exists()){
             file.mkdirs();
         }
-        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call) + ".mp3");
+        return (file.getAbsolutePath() + "/" + Storage.getFormatted(phone, contact, call, cPhone) + ".mp3");
     }
 
     void stopRecording() {
